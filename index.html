@@ -109,19 +109,16 @@
             {
               title: "科目番号",
               field: "科目番号",
-              width: 70,
+              width: 90,
+              headerFilter: true,
               formatter: function (cell, formatterParams, onRendered) {
-                //cell - the cell component
-                //formatterParams - parameters set for the column
-                //onRendered - function to call when the formatter has been rendered
-
                 return (
                   '<a href="https://kdb.tsukuba.ac.jp/syllabi/2021/' +
                   cell.getValue() +
-                  '/jpn">' +
+                  '/jpn" target="_blank">' +
                   cell.getValue() +
                   "</a>"
-                ); //return the contents of the cell;
+                );
               },
             },
             {
