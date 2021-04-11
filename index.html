@@ -110,7 +110,6 @@
             {
               title: "科目番号",
               field: "科目番号",
-              sortable: true,
               width: 100,
               formatter: function (cell, formatterParams, onRendered) {
                 //cell - the cell component
@@ -129,14 +128,12 @@
             {
               title: "科目名",
               field: "科目名",
-              sortable: true,
               headerFilter: true,
               width: 200,
             },
             {
               title: "単位",
               field: "単位",
-              sortable: true,
               sorter: "number",
               headerFilter: minMaxFilterEditor,
               headerFilterFunc: minMaxFilterFunction,
@@ -284,7 +281,6 @@
           layout: "fitDataTable",
           //   layout: "fitDataFill",
           responsiveLayout: "hide",
-          width: 800,
           height: 1200,
           pagination: "local",
           paginationSize: 20,
