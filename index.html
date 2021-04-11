@@ -110,7 +110,7 @@
             {
               title: "科目番号",
               field: "科目番号",
-              width: 100,
+              width: 70,
               formatter: function (cell, formatterParams, onRendered) {
                 //cell - the cell component
                 //formatterParams - parameters set for the column
@@ -129,7 +129,8 @@
               title: "科目名",
               field: "科目名",
               headerFilter: true,
-              width: 200,
+              formatter: "textarea",
+              width: 180,
             },
             {
               title: "単位",
@@ -145,7 +146,7 @@
               field: "年次",
               sorter: "number",
               headerFilter: true,
-              width: 70,
+              width: 60,
             },
             {
               title: "学期",
@@ -216,14 +217,15 @@
               field: "担当教員",
               headerFilter: true,
               sorter: "string",
-              width: 100,
+              formatter: "textarea",
+              width: 80,
             },
             {
               title: "備考",
               field: "備考",
               formatter: "textarea",
               headerFilter: true,
-              width: 120,
+              width: 110,
             },
             {
               title: "概要",
@@ -236,8 +238,9 @@
               title: "要件",
               field: "要件",
               headerFilter: true,
-              width: 200,
+              width: 150,
               editor:"select",
+              formatter: "textarea",
               headerFilter: true,
               headerFilterParams: {
                 values: {
@@ -279,8 +282,7 @@
           ],
           data: data,
           layout: "fitDataTable",
-          //   layout: "fitDataFill",
-          responsiveLayout: "hide",
+        //   layout: "fitDataFill",
           height: 1200,
           pagination: "local",
           paginationSize: 20,
