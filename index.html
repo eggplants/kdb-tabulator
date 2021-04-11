@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      href="https://unpkg.com/tabulator-tables@4.9.3/dist/css/tabulator.min.css"
+      rel="stylesheet"
+    />
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.min.js"
+    ></script>
+  </head>
+  <body>
+    <h1>Tabulatorに丸投げしたKdB</h1>
+    <div id="table"></div>
+    <script type="text/javascript">
+      window.onload = function () {
+        fetch("fixed_kdb.json")
+          .then((response) => response.json())
+          .then((json) => {
+            data = json;
+            show_table();
+          });
+      };
+      var minMaxFilterEditor = function (
+        cell,
+        onRendered,
+        success,
+        cancel,
+        editorParams
+      ) {
+        var end;
+
+        var container = document.createElement("span");
+
+        var start = document.createElement("input");
+        start.setAttribute("type", "number");
+        start.setAttribute("placeholder", "Min");
+        start.setAttribute("min", 0);
+        start.setAttribute("max", 100);
+        start.style.padding = "4px";
+        start.style.width = "50%";
+        start.style.boxSizing = "border-box";
+
+        start.value = cell.getValue();
+
+        function buildValues() {
+          success({
+            start: start.value,
+            end: end.value,
+          });
+        }
+
+        function keypress(e) {
+          if (e.keyCode == 13) {
+            buildValues();
+          }
+
+          if (e.keyCode == 27) {
+            cancel();
+          }
+        }
+
+        end = start.cloneNode();
+        end.setAttribute("placeholder", "Max");
+
+        start.addEventListener("change", buildValues);
+        start.addEventListener("blur", buildValues);
+        start.addEventListener("keydown", keypress);
+
+        end.addEventListener("change", buildValues);
+        end.addEventListener("blur", buildValues);
+        end.addEventListener("keydown", keypress);
+
+        container.appendChild(start);
+        container.appendChild(end);
+
+        return container;
+      };
+
+      function minMaxFilterFunction(
+        headerValue,
+        rowValue,
+        rowData,
+        filterParams
+      ) {
+        if (rowValue) {
+          if (headerValue.start != "") {
+            if (headerValue.end != "") {
+              return (
+                rowValue >= headerValue.start && rowValue <= headerValue.end
+              );
+            } else {
+              return rowValue >= headerValue.start;
+            }
+          } else {
+            if (headerValue.end != "") {
+              return rowValue <= headerValue.end;
+            }
+          }
+        }
+
+        return true;
+      }
+      const show_table = function () {
+        new Tabulator("#table", {
+          columns: [
+            {
+              title: "科目番号",
+              field: "科目番号",
+              sortable: true,
+              width: 100,
+              formatter: function (cell, formatterParams, onRendered) {
+                //cell - the cell component
+                //formatterParams - parameters set for the column
+                //onRendered - function to call when the formatter has been rendered
+
+                return (
+                  '<a href="https://kdb.tsukuba.ac.jp/syllabi/2021/' +
+                  cell.getValue() +
+                  '/jpn">' +
+                  cell.getValue() +
+                  "</a>"
+                ); //return the contents of the cell;
+              },
+            },
+            {
+              title: "科目名",
+              field: "科目名",
+              sortable: true,
+              headerFilter: true,
+              width: 200,
+            },
+            {
+              title: "単位",
+              field: "単位",
+              sortable: true,
+              sorter: "number",
+              headerFilter: minMaxFilterEditor,
+              headerFilterFunc: minMaxFilterFunction,
+              headerFilterLiveFilter: false,
+              width: 100,
+            },
+            {
+              title: "年次",
+              field: "年次",
+              sorter: "number",
+              headerFilter: true,
+              width: 70,
+            },
+            {
+              title: "学期",
+              field: "学期",
+              sorter: "string",
+              headerFilter: true,
+              editor:"select",
+              headerFilterParams: {
+                values: {
+                  "春A": "春A",
+                  "春B": "春B",
+                  "春C": "春C",
+                  "春季休業中": "春季休業中",
+                  "秋A": "秋A",
+                  "秋B": "秋B",
+                  "秋C": "秋C",
+                  "秋季休業中": "秋季休業中",
+                  "": "",
+                },
+              },
+              width: 100,
+            },
+            {
+              title: "曜時限",
+              field: "曜時限",
+              sorter: "string",
+              headerFilter: true,
+              headerFilterParams: {
+                values: {
+                  "1": "1",
+                  "2": "2",
+                  "3": "3",
+                  "4": "4",
+                  "5": "5",
+                  "6": "6",
+                  "": "",
+                },
+              },
+              width: 80,
+            },
+            {
+              title: "担当",
+              field: "担当教員",
+              headerFilter: true,
+              sorter: "string",
+              width: 100,
+            },
+            {
+              title: "備考",
+              field: "備考",
+              formatter: "textarea",
+              headerFilter: true,
+              width: 120,
+            },
+            {
+              title: "概要",
+              field: "概要",
+              headerFilter: true,
+              formatter: "textarea",
+              width: 200,
+            },
+            {
+              title: "要件",
+              field: "要件",
+              headerFilter: true,
+              width: 100,
+              headerFilter: true,
+              headerFilterParams: {
+                values: {
+                  male: "Male",
+                  female: "Female",
+                  "": "",
+                },
+              },
+            },
+          ],
+          data: data,
+          layout: "fitDataTable",
+          //   layout: "fitDataFill",
+          responsiveLayout: "hide",
+          width: 800,
+          height: 1200,
+          pagination: "local",
+          paginationSize: 20,
+          movableColumns: true,
+          paginationSizeSelector: [20, 50, 100, 200],
+        });
+      };
+    </script>
+  </body>
+</html>
